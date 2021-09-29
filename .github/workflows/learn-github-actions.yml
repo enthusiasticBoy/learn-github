@@ -1,41 +1,66 @@
-name: learn-github-actions
-on: [push]
+# windows.yml
+name: Windows
+on: 
+  # push代码时触发workflow
+  push:
+    # 忽略README.md
+    paths-ignore:
+      - 'README.md'
+      - 'LICENSE'
+  # pull_request时触发workflow
+  pull_request:
+    # 忽略README.md
+    paths-ignore:
+      - 'README.md'
+      - 'LICENSE'
 jobs:
-  check-bats-version:
+  build:
+    name: Build
+    # 运行平台， windows-latest目前是windows server 2019
     runs-on: windows-latest
+    strategy:
+      # 矩阵配置
+      matrix:
+        qt_ver: [6.1.3]
+        qt_target: [desktop]
+        # mingw用不了
+        # qt_arch: [win64_msvc2017_64, win32_msvc2017, win32_mingw53,win32_mingw73]
+        qt_arch: [win64_msvc2019_64]
+#         # 从矩阵中除外的配置
+#         exclude: 
+#           # 不存在5.9.8-win32_msvc2017的版本
+#           - qt_ver: 5.9.8
+#             qt_arch: win32_msvc2019
+#           # mingw用不了
+#         # 额外设置msvc_arch
+#         include:
+#           - qt_arch: win64_msvc2019_64
+#             msvc_arch: x64
+#           - qt_arch: win32_msvc2019
+#             msvc_arch: x86
+    # 步骤
     steps:
+      # 安装Qt
       - name: Install Qt
-  # You may pin to the exact commit or the version.
-  # uses: jurplel/install-qt-action@c04feedfdfd6dbe64db62deda57fb0971a1bf440
-      uses: jurplel/install-qt-action@v2.14.0
-      with:
-        # Directory to install Qt
-        dir: # optional
-        # Version of Qt to install
-        version: # optional, default is 5.15.2
-        # Host platform
-        host: # optional
-        # Target platform for build
-        target: # optional, default is desktop
-        # Architecture for Windows/Android
-        arch: # optional
-        # Whether or not to install Qt dependencies on Linux
-        install-deps: # optional, default is true
-        # Additional Qt modules to install
-        modules: # optional
-        # Whether or not to actually download Qt
-        cached: # optional, default is false
-        # Whether or not to automatically run setup-python to find a valid python version.
-        setup-python: # optional, default is true
-        # Qt tools to download--specify comma-separated argument lists which are themselves separated by spaces: <tool_name>,<tool_version>,<tool_arch>
-        tools: # optional
-        # Whether or not to set environment variables after running aqtinstall
-        set-env: # optional, default is true
-        # Whether or not to actually install Qt or just the tools from the tools argument
-        tools-only: # optional, default is false
-        # Version of aqtinstall to use in case of issues
-        aqtversion: # optional, default is ==1.2.5
-        # Version of py7zr to use in case of issues
-        py7zrversion: # optional, default is ==0.16.1
-        # Any extra arguments to append to the back
-        extra: # optional
+        # 使用外部action。这个action专门用来安装Qt
+        uses: jurplel/install-qt-action@v2
+        with:
+          # Version of Qt to install
+          version: ${{ matrix.qt_ver }}
+          # Target platform for build
+          target: ${{ matrix.qt_target }}
+          # Architecture for Windows/Android
+          arch: ${{ matrix.qt_arch }}
+      # 拉取代码
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+      # 编译msvc
+      - name: build-msvc
+        shell: cmd
+        env:
+          vc_arch: ${{ matrix.msvc_arch }}
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" %vc_arch%
+          qmake
+          nmake
