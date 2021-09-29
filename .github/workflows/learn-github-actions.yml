@@ -1,66 +1,48 @@
-# windows.yml
-name: Windows
-on: 
-  # push代码时触发workflow
-  push:
-    # 忽略README.md
-    paths-ignore:
-      - 'README.md'
-      - 'LICENSE'
-  # pull_request时触发workflow
-  pull_request:
-    # 忽略README.md
-    paths-ignore:
-      - 'README.md'
-      - 'LICENSE'
+name: Test Installing Qt
+
+on: [push, pull_request]
+
 jobs:
-  build:
-    name: Build
-    # 运行平台， windows-latest目前是windows server 2019
-    runs-on: windows-latest
+  test:
+    runs-on: ${{ matrix.os }}
     strategy:
-      # 矩阵配置
       matrix:
-        qt_ver: [6.1.3]
-        qt_target: [desktop]
-        # mingw用不了
-        # qt_arch: [win64_msvc2017_64, win32_msvc2017, win32_mingw53,win32_mingw73]
-        qt_arch: [win64_msvc2019_64]
-#         # 从矩阵中除外的配置
-#         exclude: 
-#           # 不存在5.9.8-win32_msvc2017的版本
-#           - qt_ver: 5.9.8
-#             qt_arch: win32_msvc2019
-#           # mingw用不了
-#         # 额外设置msvc_arch
-#         include:
-#           - qt_arch: win64_msvc2019_64
-#             msvc_arch: x64
-#           - qt_arch: win32_msvc2019
-#             msvc_arch: x86
-    # 步骤
+        os: [ubuntu-20.04, ubuntu-18.04, windows-2019, macos-10.15]
+        version: ['6.1.3','6.2.0']
     steps:
-      # 安装Qt
-      - name: Install Qt
-        # 使用外部action。这个action专门用来安装Qt
-        uses: jurplel/install-qt-action@v2
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v1
         with:
-          # Version of Qt to install
-          version: ${{ matrix.qt_ver }}
-          # Target platform for build
-          target: ${{ matrix.qt_target }}
-          # Architecture for Windows/Android
-          arch: ${{ matrix.qt_arch }}
-      # 拉取代码
-      - uses: actions/checkout@v1
-        with:
-          fetch-depth: 1
-      # 编译msvc
-      - name: build-msvc
-        shell: cmd
-        env:
-          vc_arch: ${{ matrix.msvc_arch }}
+          node-version: '10.x'
+
+      - name: "npm ci"
+        run: npm ci
+
+      - name: "npm run build"
         run: |
-          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" %vc_arch%
+          npm run build-setup-python
+          npm run build
+      - name: Install Qt with options
+        uses: ./
+        with:
+          modules: 'qtwebengine'
+          version: ${{ matrix.version }}
+          tools: 'tools_ifw,4.0.0,qt.tools.ifw.40 tools_qtcreator,4.13.2-0,qt.tools.qtcreator'
+
+      - name: Configure test project on windows
+        if: startsWith(matrix.os, 'windows')
+        run: |
+          cd src
+          call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          dir %Qt6_DIR%/lib/cmake
           qmake
-          nmake
+        shell: cmd
+          
+      - name: Configure test project on unix
+        if: (!startsWith(matrix.os, 'windows'))
+        run: |
+          cd src
+          ls $Qt6_DIR/lib/cmake
+          qmake
+        shell: bash
