@@ -16,13 +16,13 @@ jobs:
         with:
           node-version: '10.x'
 
-      - name: "npm ci"
-        run: npm ci
+#       - name: "npm ci"
+#         run: npm ci
 
-      - name: "npm run build"
-        run: |
-          npm run build-setup-python
-          npm run build
+#       - name: "npm run build"
+#         run: |
+#           npm run build-setup-python
+#           npm run build
       - name: Install Qt
         uses: jurplel/install-qt-action@v2.14.0
         with:
