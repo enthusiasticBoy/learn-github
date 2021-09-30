@@ -68,6 +68,6 @@ jobs:
         if: (!startsWith(matrix.os, 'windows'))
         run: |
           cd src
-          %Qt6_DIR%/bin/qmake
+          %Qt6_DIR%/bin/qmake *.pro
           make
         shell: bash
