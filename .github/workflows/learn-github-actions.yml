@@ -7,7 +7,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-2019, ubuntu-20.04]
+        os: [ubuntu-20.04]
         version: ['6.1.3']
     steps:
       - uses: actions/checkout@v2
@@ -33,7 +33,7 @@ jobs:
           # Target platform for build
           target: 'desktop'
           # Architecture for Windows/Android
-          arch: 'win64_msvc2019_64'
+          #arch: 'win64_msvc2019_64'
           # Whether or not to install Qt dependencies on Linux
           install-deps: 'true'
           # Additional Qt modules to install
