@@ -67,7 +67,8 @@ jobs:
       - name: Configure test project on unix
         if: (!startsWith(matrix.os, 'windows'))
         run: |
-          cd src
-          %Qt6_DIR%/bin/qmake *.pro
-          make
+          pwd
+          #cd src
+          #%Qt6_DIR%/bin/qmake *.pro
+          #make
         shell: bash
