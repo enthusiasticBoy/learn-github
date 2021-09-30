@@ -67,6 +67,7 @@ jobs:
       - name: Configure test project on unix
         if: (!startsWith(matrix.os, 'windows'))
         run: |
+          set -m
           ls
           mkdir build
           cd build/
