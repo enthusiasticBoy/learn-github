@@ -43,7 +43,7 @@ jobs:
           # Whether or not to automatically run setup-python to find a valid python version.
           setup-python: 'true'
           # Qt tools to download--specify comma-separated argument lists which are themselves separated by spaces: <tool_name>,<tool_version>,<tool_arch>
-          tools: 'qt.tools.ifw41,4.1.1-202105261131,qt.tools.ifw tools_qtcreator,5.0.1-0,qt.tools.qtcreator'
+          #tools: 'qt.tools.ifw41,4.1.1-202105261131,qt.tools.ifw tools_qtcreator,5.0.1-0,qt.tools.qtcreator'
           # Whether or not to set environment variables after running aqtinstall
           set-env: 'true'
           # Whether or not to actually install Qt or just the tools from the tools argument
