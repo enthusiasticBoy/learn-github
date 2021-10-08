@@ -33,4 +33,11 @@ jobs:
 #         uses: microsoft/setup-msbuild@v1.0.2
 #         with:
 #           vs-version: 16.4
+      - name: build
+        run: |
+          dir Qt/${{ matrix.version }}/
+          mkdir build
+          cd build
+          Qt/${{ matrix.version }}/msvc2019/bin/qmake ../src/*.pro -spec win32-msvc
+          Qt/Tools/QtCreator/bin/jom/jom.exe
               
