@@ -35,9 +35,11 @@ jobs:
 #           vs-version: 16.4
       - name: build
         run: |
-          dir Qt/${{ matrix.version }}/
-          mkdir build
-          cd build
-          Qt/${{ matrix.version }}/msvc2019/bin/qmake ../src/*.pro -spec win32-msvc
-          Qt/Tools/QtCreator/bin/jom/jom.exe
+          pwd
+          dir
+#          dir Qt/${{ matrix.version }}/
+#          mkdir build
+#          cd build
+#          Qt/${{ matrix.version }}/msvc2019/bin/qmake ../src/*.pro -spec win32-msvc
+#          Qt/Tools/QtCreator/bin/jom/jom.exe
               
