@@ -38,9 +38,11 @@ jobs:
         run: |
           mkdir build
           cd build
+          # set msvc env
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64}
           dir ../${{ matrix.version }}/msvc2019_64/bin/qmake*
           dir ../Tools/QtCreator/bin/jom/jom*
           dir ../src/
-          ../${{ matrix.version }}/msvc2019_64/bin/qmake.exe ../src/test.pro -spec win32-msvc
+          ../${{ matrix.version }}/msvc2019_64/bin/qmake.exe ../src/test.pro -spec win32-msvc "CONFIG+=release"
           ../Tools/QtCreator/bin/jom/jom.exe
               
