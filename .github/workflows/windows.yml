@@ -38,6 +38,6 @@ jobs:
         run: |
           mkdir build
           cd build
-          ../${{ matrix.version }}/msvc2019/bin/qmake ../src/*.pro -spec win32-msvc
+          ../${{ matrix.version }}/msvc2019/bin/qmake.exe ../src/*.pro -spec win32-msvc
           ../Tools/QtCreator/bin/jom/jom.exe
               
