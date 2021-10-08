@@ -1,0 +1,67 @@
+name: Test Installing Qt
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest]
+        version: ['6.2.0']
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2.14.0
+        with:
+          # Version of Qt to install
+          version: ${{ matrix.version }}
+          # Host platform
+          host: 'windows'
+          # Target platform for build
+          target: 'desktop'
+          # Architecture for Windows/Android
+          arch: 'win64_msvc2019_64'
+          # Whether or not to install Qt dependencies on Linux
+          install-deps: 'true'
+          # Additional Qt modules to install
+          modules: 'qtcharts '
+          # Whether or not to actually download Qt
+          cached: 'false'
+          # Whether or not to automatically run setup-python to find a valid python version.
+          setup-python: 'true'
+          # Qt tools to download--specify comma-separated argument lists which are themselves separated by spaces: <tool_name>,<tool_version>,<tool_arch>
+          tools: 'tools_qtcreator,5.0.2-0,qt.tools.qtcreator'
+          # Whether or not to set environment variables after running aqtinstall
+          set-env: 'true'
+          # Whether or not to actually install Qt or just the tools from the tools argument
+          tools-only: 'fasle'
+          # Version of aqtinstall to use in case of issues
+          aqtversion: '==2.0.0'
+          # Version of py7zr to use in case of issues
+          py7zrversion: '==0.16.1'
+          # Any extra arguments to append to the back
+          extra: '--external 7z'    
+
+      - name: Configure test project on windows
+        if: startsWith(matrix.os, 'windows')
+        run: |
+          mkdir build
+          cd build/
+          # call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          dir %Qt6_DIR%/
+          # %Qt6_DIR%/qmake ../src/*.pro
+          # nmake
+        shell: cmd
+          
+      - name: Configure test project on unix
+        if: (!startsWith(matrix.os, 'windows'))
+        run: |
+          set -m
+          mkdir build
+          cd build/
+          ${Qt6_DIR}/bin/qmake ../src/*.pro
+          make
+          ls -l
+        shell: bash
