@@ -18,8 +18,8 @@ jobs:
         with:
           path: |
             #~\AppData\Local\pip\Cache
-            ${{env.GITHUB_WORKSPACE}}/${{ matrix.version }}
-            ${{env.GITHUB_WORKSPACE}}/Tools}
+            ./${{ matrix.version }}
+            ./Tools
           key: ${{ runner.os }}-Qt/${{matrix.version}}
       - name: setup python
         uses: actions/setup-python@v2.2.2
