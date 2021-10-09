@@ -11,17 +11,29 @@ jobs:
         version: ['6.2.0']
     steps:
       - uses: actions/checkout@v2
+      
+      - name: cache-qt
+        id: cache-qt
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~\AppData\Local\pip\Cache
+            ${{GITHUB_WORKSPACE}}\${{ matrix.version }}
+            ${{GITHUB_WORKSPACE}}\Tools}
+          key: ${{ runner.os }}-Qt/${{matrix.version}}
       - name: setup python
         uses: actions/setup-python@v2.2.2
         with:
           python-version: 3.9 #install the python needed
       - name: install aqt
+        if: setps.cache-qt.outputs.cache-hit != 'true'
         run: |
           python -m pip install -U pip
           python -m pip install setuptools wheel
           python -m pip install py7zr
           python -m pip install aqtinstall
       - name: install qt
+        if: setps.cache-qt.outputs.cache-hit != 'true'
         run: |
           # install qt
           aqt install qt windows desktop ${{ matrix.version }} win64_msvc2019_64
@@ -40,12 +52,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          # set msvc env
-          # dir C:\Program Files (x86)\Microsoft Visual Studio\2019          
-          # call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
-          dir ../${{ matrix.version }}/msvc2019_64/bin/qmake*
-          dir ../Tools/QtCreator/bin/jom/jom*
-          dir ../src/
           ../${{ matrix.version }}/msvc2019_64/bin/qmake.exe ../src/test.pro -spec win32-msvc "CONFIG+=release"
           ../Tools/QtCreator/bin/jom/jom.exe
+          dir *.exe
               
