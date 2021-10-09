@@ -5,8 +5,8 @@ test repro to learn github
 |---------------|---------------|  
 | ![win-badge]  | ![ubuntu-badge] |
 
-[win-link]: https://github.com/enthusiasticBoy/learn-github/actions?query=workflow%3Awindows++ "WindowsAction"
-[win-badge]: https://github.com/enthusiasticBoy/learn-github//actions/workflows/windows.yml/badge.svg  "Windows"
+[win-link]: https://github.com/enthusiasticBoy/learn-github/actions?query=workflow%3Awindows++ 
+[win-badge]: https://github.com/enthusiasticBoy/learn-github//actions/workflows/windows.yml/badge.svg 
 
-[ubuntu-link]: https://github.com/enthusiasticBoy/learn-github/actions/workflows/learn-github-actions.yml?query=workflow%3Aubuntu++ "UbuntuAction"
-[ubuntu-badge]: https://github.com/enthusiasticBoy/learn-github//actions/workflows/learn-github-actions.yml/badge.svg "Ubuntu"
+[ubuntu-link]: https://github.com/enthusiasticBoy/learn-github/actions/workflows/learn-github-actions.yml?query=workflow%3Aubuntu++
+[ubuntu-badge]: https://github.com/enthusiasticBoy/learn-github//actions/workflows/learn-github-actions.yml/badge.svg 
