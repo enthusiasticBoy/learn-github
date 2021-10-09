@@ -26,14 +26,14 @@ jobs:
         with:
           python-version: 3.9 #install the python needed
       - name: install aqt
-        if: setps.cache-qt.outputs.cache-hit != 'true'
+        if: steps.cache-qt.outputs.cache-hit != 'true'
         run: |
           python -m pip install -U pip
           python -m pip install setuptools wheel
           python -m pip install py7zr
           python -m pip install aqtinstall
       - name: install qt
-        if: setps.cache-qt.outputs.cache-hit != 'true'
+        if: steps.cache-qt.outputs.cache-hit != 'true'
         run: |
           # install qt
           aqt install qt windows desktop ${{ matrix.version }} win64_msvc2019_64
