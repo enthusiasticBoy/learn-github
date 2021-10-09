@@ -54,5 +54,5 @@ jobs:
           cd build
           ../${{ matrix.version }}/msvc2019_64/bin/qmake.exe ../src/test.pro -spec win32-msvc "CONFIG+=release"
           ../Tools/QtCreator/bin/jom/jom.exe
-          dir *.exe
+          dir release/*.exe
               
